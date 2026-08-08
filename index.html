@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ScaleContab | Estrutura comercial para escritórios de contabilidade</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600;9..144,700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  *,*::before,*::after{margin:0;padding:0;box-sizing:border-box;}
+  :root{
+    --ink-950:#0A0D16;
+    --ink-900:#0F1320;
+    --ink-850:#141A2C;
+    --paper:#F6F3EA;
+    --paper-dim:#EDE9DC;
+    --line-dark:rgba(245,242,234,0.14);
+    --line-dark-soft:rgba(245,242,234,0.08);
+    --line-light:rgba(15,19,32,0.13);
+    --line-light-soft:rgba(15,19,32,0.08);
+    --gold:#A9812E;
+    --gold-soft:#C7A662;
+    --gold-dim:rgba(169,129,46,0.16);
+    --text-onDark:#EEEAE0;
+    --text-onDark-dim:#A9A79C;
+    --text-onDark-faint:#787869;
+    --text-onLight:#171A22;
+    --text-onLight-dim:#5B5B52;
+    --ok:#4F7A5C;
+    --no:#9C5142;
+    --radius-sm:4px;
+    --radius-md:6px;
+    --radius-lg:10px;
+    --font-display:'Fraunces',serif;
+    --font-body:'Inter',sans-serif;
+  }
+  html{scroll-behavior:smooth;}
+  @media (prefers-reduced-motion: reduce){ html{scroll-behavior:auto;} *{animation:none !important; transition:none !important;} }
+  body{
+    font-family:var(--font-body);
+    background:var(--ink-950);
+    color:var(--text-onDark);
+    line-height:1.6;
+    overflow-x:hidden;
+  }
+  .wrap{width:90%;max-width:1140px;margin:0 auto;}
+  a{color:inherit;}
+  :focus-visible{outline:2px solid var(--gold-soft);outline-offset:3px;}
+
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .55s ease,transform .55s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+
+  /* ===== TOP BAR ===== */
+  .topbar{
+    position:sticky; top:0; z-index:200;
+    background:var(--ink-900);
+    border-bottom:1px solid var(--gold-dim);
+    padding:10px 20px;
+  }
+  .topbar-inner{
+    max-width:1140px;margin:0 auto;
+    display:flex;align-items:center;justify-content:center;gap:16px;flex-wrap:wrap;
+  }
+  .topbar p{font-size:13px;color:var(--text-onDark-dim);font-weight:500;letter-spacing:.01em;}
+  .topbar p b{color:var(--gold-soft);font-weight:700;}
+  .topbar s{color:var(--text-onDark-faint);}
+  .timer{display:inline-flex;gap:6px;align-items:center;}
+  .tunit{display:flex;flex-direction:column;align-items:center;background:var(--ink-850);
+    border:1px solid var(--line-dark);border-radius:var(--radius-sm);padding:3px 9px;min-width:44px;}
+  .tunit strong{font-size:16px;font-weight:600;color:var(--gold-soft);line-height:1.1;font-variant-numeric:tabular-nums;font-family:var(--font-display);}
+  .tunit span{font-size:9px;color:var(--text-onDark-faint);text-transform:uppercase;letter-spacing:.06em;}
+  .tsep{color:var(--gold-soft);font-size:14px;font-weight:600;}
+
+  /* ===== HERO ===== */
+  header{position:relative;padding:76px 0 64px;border-bottom:1px solid var(--line-dark-soft);}
+  .hero-grid{display:grid;grid-template-columns:1.15fr 1fr;gap:56px;align-items:start;}
+  .kicker{
+    display:inline-flex;align-items:center;gap:9px;
+    color:var(--gold-soft);
+    font-size:12px;font-weight:600;letter-spacing:.12em;text-transform:uppercase;margin-bottom:24px;
+    padding-bottom:10px;border-bottom:1px solid var(--gold-dim);
+  }
+  h1{
+    font-family:var(--font-display);
+    font-size:46px;font-weight:600;line-height:1.15;letter-spacing:-0.01em;margin-bottom:22px;
+    color:var(--text-onDark);
+  }
+  h1 em{font-style:italic;color:var(--gold-soft);}
+  .hero-desc{font-size:17px;color:var(--text-onDark-dim);max-width:540px;margin-bottom:28px;line-height:1.75;}
+  .hero-desc b{color:var(--text-onDark);font-weight:600;}
+  .check-list{list-style:none;margin-bottom:34px;display:flex;flex-direction:column;gap:12px;border-left:1px solid var(--line-dark);padding-left:18px;}
+  .check-list li{font-size:15px;color:var(--text-onDark-dim);font-weight:400;position:relative;}
+  .cta-row{display:flex;align-items:center;gap:18px;flex-wrap:wrap;}
+  .cta-primary{
+    display:inline-flex;align-items:center;gap:10px;
+    background:var(--gold);
+    color:#0F0B02;font-family:var(--font-body);font-size:15px;font-weight:600;
+    padding:15px 28px;border-radius:var(--radius-sm);text-decoration:none;border:1px solid var(--gold);
+    transition:background .2s,transform .2s;letter-spacing:.01em;
+  }
+  .cta-primary:hover{background:var(--gold-soft);transform:translateY(-1px);}
+  .cta-primary svg{width:16px;height:16px;}
+  .cta-secondary-note{font-size:13px;color:var(--text-onDark-faint);}
+
+  /* hero authority card */
+  .hero-card{
+    background:var(--ink-900);
+    border:1px solid var(--line-dark);border-radius:var(--radius-lg);padding:0;
+    overflow:hidden;
+  }
+  .hc-label{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-onDark-faint);font-weight:600;padding:20px 24px 16px;border-bottom:1px solid var(--line-dark-soft);}
+  .hc-stats{display:grid;grid-template-columns:1fr 1fr;border-bottom:1px solid var(--line-dark-soft);}
+  .hc-stat{padding:20px 24px;border-right:1px solid var(--line-dark-soft);}
+  .hc-stat:last-child{border-right:none;}
+  .hc-stat strong{display:block;font-family:var(--font-display);font-size:26px;font-weight:600;color:var(--gold-soft);letter-spacing:-0.01em;}
+  .hc-stat span{font-size:12px;color:var(--text-onDark-faint);font-weight:500;}
+  .hc-modlist{display:flex;flex-direction:column;}
+  .hc-mod{display:flex;align-items:center;gap:14px;padding:14px 24px;border-bottom:1px solid var(--line-dark-soft);}
+  .hc-mod:last-child{border-bottom:none;}
+  .hc-mod-num{font-family:var(--font-display);font-size:13px;color:var(--gold-soft);font-weight:600;min-width:20px;}
+  .hc-mod h4{font-size:13.5px;font-weight:600;color:var(--text-onDark);}
+  .hc-mod p{font-size:11.5px;color:var(--text-onDark-faint);}
+  .hc-modlist-compact{display:grid;grid-template-columns:1fr 1fr;}
+  .hc-mod-mini{display:flex;align-items:center;gap:9px;padding:11px 24px;font-size:12.5px;color:var(--text-onDark-dim);font-weight:500;border-bottom:1px solid var(--line-dark-soft);}
+  .hc-mod-mini:nth-child(odd){border-right:1px solid var(--line-dark-soft);}
+  .hc-mod-mini:nth-last-child(-n+2){border-bottom:none;}
+  .hc-mod-mini span{font-family:var(--font-display);font-size:12px;color:var(--gold-soft);font-weight:600;}
+  .hc-foot{padding:16px 24px;display:flex;justify-content:space-between;align-items:center;background:var(--ink-850);}
+  .hc-foot span{font-size:12px;color:var(--text-onDark-faint);}
+  .hc-badge{color:var(--gold-soft);font-size:12px;font-weight:600;letter-spacing:.03em;}
+
+  /* ===== PROOF STRIP ===== */
+  .proof-strip{background:var(--ink-900);border-bottom:1px solid var(--line-dark-soft);padding:20px 0;}
+  .proof-items{display:flex;justify-content:center;flex-wrap:wrap;gap:14px 44px;}
+  .proof-item{font-size:13px;color:var(--text-onDark-dim);font-weight:500;letter-spacing:.01em;}
+
+  /* ===== SECTION DEFAULTS ===== */
+  section{padding:88px 0;}
+  .section-light{background:var(--paper);color:var(--text-onLight);}
+  .eyebrow-tag{display:inline-block;font-family:var(--font-body);font-size:11.5px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;color:var(--gold);margin-bottom:16px;}
+  .section-light .eyebrow-tag{color:var(--gold);}
+  header .eyebrow-tag, .transform-section .eyebrow-tag{color:var(--gold-soft);}
+  .section-title{font-family:var(--font-display);font-size:33px;font-weight:600;line-height:1.2;letter-spacing:-0.01em;margin-bottom:16px;}
+  .section-desc{font-size:16.5px;color:var(--text-onDark-dim);max-width:640px;line-height:1.75;}
+  .section-light .section-desc{color:var(--text-onLight-dim);}
+  .text-center{text-align:center;}
+  .text-center .section-desc{margin:0 auto;}
+
+  /* ===== QUALIFIER ===== */
+  .qualify-section{background:var(--ink-950);}
+  .qualify-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:48px;background:var(--line-dark-soft);border:1px solid var(--line-dark-soft);}
+  .q-card{background:var(--ink-950);padding:32px;}
+  .q-head{display:flex;align-items:center;gap:12px;margin-bottom:20px;padding-bottom:16px;border-bottom:1px solid var(--line-dark-soft);}
+  .q-ico{font-family:var(--font-display);font-size:17px;font-weight:600;}
+  .q-card.yes .q-ico{color:var(--ok);}
+  .q-card.no .q-ico{color:var(--no);}
+  .q-card h3{font-family:var(--font-display);font-size:18px;font-weight:600;}
+  .q-list{list-style:none;display:flex;flex-direction:column;gap:13px;}
+  .q-list li{font-size:14.5px;color:var(--text-onDark-dim);line-height:1.55;padding-left:16px;position:relative;}
+  .q-list li::before{content:'—';position:absolute;left:0;color:var(--text-onDark-faint);}
+
+  /* ===== PAIN / SOLUTION ===== */
+  .pain-section{background:var(--ink-950);}
+  .pain-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;margin-top:48px;background:var(--line-dark-soft);border:1px solid var(--line-dark-soft);}
+  .pain-card{background:var(--ink-950);padding:32px;}
+  .pain-card.solution{background:var(--ink-900);}
+  .pain-card-label{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--text-onDark-faint);margin-bottom:14px;}
+  .pain-card.solution .pain-card-label{color:var(--gold-soft);}
+  .pain-card h3{font-family:var(--font-display);font-size:18px;font-weight:600;margin-bottom:18px;}
+  .pain-list{list-style:none;}
+  .pain-list li{font-size:14.5px;color:var(--text-onDark-dim);padding:11px 0;border-bottom:1px solid var(--line-dark-soft);line-height:1.5;}
+  .pain-list li:last-child{border-bottom:none;}
+
+  /* ===== INFO CAROUSEL ===== */
+  .carousel-section{background:var(--ink-900);border-top:1px solid var(--line-dark-soft);border-bottom:1px solid var(--line-dark-soft);}
+  .carousel-head{display:flex;align-items:flex-end;justify-content:space-between;gap:24px;flex-wrap:wrap;margin-bottom:36px;}
+  .carousel-nav{display:flex;gap:8px;}
+  .car-btn{width:38px;height:38px;border:1px solid var(--line-dark);background:transparent;color:var(--text-onDark);border-radius:var(--radius-sm);cursor:pointer;display:flex;align-items:center;justify-content:center;transition:border-color .2s,color .2s;}
+  .car-btn:hover{border-color:var(--gold-soft);color:var(--gold-soft);}
+  .carousel-track{display:flex;gap:16px;overflow-x:auto;scroll-snap-type:x mandatory;padding-bottom:8px;scrollbar-width:none;}
+  .carousel-track::-webkit-scrollbar{display:none;}
+  .car-card{scroll-snap-align:start;flex:0 0 auto;width:260px;background:var(--ink-950);border:1px solid var(--line-dark);border-radius:var(--radius-md);padding:26px 24px;}
+  .car-card .car-num{font-family:var(--font-display);font-size:13px;color:var(--gold-soft);font-weight:600;margin-bottom:14px;}
+  .car-card strong{display:block;font-family:var(--font-display);font-size:30px;font-weight:600;color:var(--text-onDark);letter-spacing:-0.01em;margin-bottom:6px;}
+  .car-card p{font-size:13.5px;color:var(--text-onDark-dim);line-height:1.55;}
+
+  /* ===== MODULES ===== */
+  .inside-section{background:var(--paper);color:var(--text-onLight);}
+  .modules-list{margin-top:48px;border-top:1px solid var(--line-light);}
+  .mod-row{display:grid;grid-template-columns:60px 1.3fr 1.7fr;gap:24px;padding:28px 0;border-bottom:1px solid var(--line-light);align-items:start;}
+  .mod-row-num{font-family:var(--font-display);font-size:22px;font-weight:600;color:var(--gold);}
+  .mod-row h3{font-family:var(--font-display);font-size:19px;font-weight:600;color:var(--text-onLight);margin-bottom:4px;}
+  .mod-row .mod-sub{font-size:12.5px;color:var(--gold);font-weight:600;letter-spacing:.02em;}
+  .tag-list{display:flex;flex-wrap:wrap;gap:8px;}
+  .tag{border:1px solid var(--line-light);padding:6px 13px;border-radius:999px;font-size:12.5px;color:var(--text-onLight-dim);font-weight:500;background:var(--paper-dim);}
+
+  /* ===== PREVIEW ===== */
+  .preview-section{background:var(--ink-950);}
+  .preview-box{margin-top:48px;background:var(--ink-900);border:1px solid var(--line-dark);border-radius:var(--radius-lg);overflow:hidden;}
+  .preview-topbar{display:flex;align-items:center;gap:8px;padding:13px 18px;border-bottom:1px solid var(--line-dark-soft);}
+  .dot{width:8px;height:8px;border-radius:50%;background:var(--text-onDark-faint);}
+  .preview-url{margin-left:8px;font-size:12px;color:var(--text-onDark-faint);}
+  .preview-content{padding:30px 34px;}
+  .notion-sidebar{display:flex;gap:28px;}
+  .notion-nav{width:180px;flex-shrink:0;}
+  .notion-nav-item{display:flex;align-items:center;gap:8px;padding:7px 10px;border-radius:var(--radius-sm);font-size:13px;color:var(--text-onDark-faint);}
+  .notion-nav-item.active{background:var(--ink-850);color:var(--gold-soft);}
+  .notion-main{flex:1;}
+  .notion-heading{font-family:var(--font-display);font-size:23px;font-weight:600;letter-spacing:-0.01em;margin-bottom:6px;}
+  .notion-sub{font-size:13.5px;color:var(--text-onDark-faint);margin-bottom:22px;}
+  .notion-cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;}
+  .notion-card{border:1px solid var(--line-dark-soft);border-radius:var(--radius-sm);padding:14px;}
+  .notion-card-tag{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:.08em;color:var(--gold-soft);margin-bottom:6px;}
+  .notion-card h4{font-size:13px;font-weight:600;margin-bottom:4px;line-height:1.3;}
+  .notion-card p{font-size:11px;color:var(--text-onDark-faint);line-height:1.4;}
+  .preview-benefits-strip{display:grid;grid-template-columns:repeat(4,1fr);gap:1px;margin-top:1px;background:var(--line-dark-soft);border:1px solid var(--line-dark-soft);}
+  .pb-item{padding:20px;background:var(--ink-950);}
+  .pb-item h4{font-size:13.5px;font-weight:600;margin-bottom:4px;color:var(--text-onDark);}
+  .pb-item p{font-size:12.5px;color:var(--text-onDark-faint);line-height:1.4;}
+
+  /* ===== TESTIMONIALS ===== */
+  .testi-section{background:var(--paper);color:var(--text-onLight);}
+  .testi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:1px;margin-top:48px;background:var(--line-light);border:1px solid var(--line-light);}
+  .testi-card{background:var(--paper);padding:28px;}
+  .testi-stars{color:var(--gold);font-size:13px;letter-spacing:2px;margin-bottom:16px;}
+  .testi-card p{font-size:14.5px;color:var(--text-onLight-dim);line-height:1.65;margin-bottom:20px;}
+  .testi-person{padding-top:16px;border-top:1px solid var(--line-light);}
+  .testi-person strong{display:block;font-size:14px;font-weight:600;color:var(--text-onLight);}
+  .testi-person span{font-size:12.5px;color:var(--text-onLight-dim);}
+
+  /* ===== TRANSFORMATION ===== */
+  .transform-section{background:var(--ink-950);}
+  .transform-box{
+    border:1px solid var(--line-dark);border-radius:var(--radius-lg);padding:60px;text-align:center;
+  }
+  .transform-box h2{font-family:var(--font-display);font-size:31px;font-weight:600;letter-spacing:-0.01em;margin-bottom:18px;}
+  .transform-box p{font-size:16.5px;color:var(--text-onDark-dim);max-width:700px;margin:0 auto 32px;line-height:1.75;}
+
+  /* ===== PRICE STACK ===== */
+  .price-section{background:var(--paper);color:var(--text-onLight);}
+  .stack-card{
+    max-width:600px;margin:48px auto 0;
+    background:var(--ink-950);color:var(--text-onDark);
+    border:1px solid var(--ink-950);border-radius:var(--radius-lg);
+    overflow:hidden;
+  }
+  .stack-head{padding:28px 34px 20px;text-align:center;border-bottom:1px solid var(--line-dark-soft);}
+  .stack-eyebrow{font-size:11px;font-weight:600;letter-spacing:.1em;text-transform:uppercase;color:var(--gold-soft);margin-bottom:10px;}
+  .stack-head h2{font-family:var(--font-display);font-size:21px;font-weight:600;}
+  .stack-items{padding:6px 34px;}
+  .stack-item{display:flex;align-items:center;justify-content:space-between;padding:14px 0;border-bottom:1px solid var(--line-dark-soft);gap:16px;}
+  .stack-item:last-child{border-bottom:none;}
+  .stack-item-name{font-size:14px;color:var(--text-onDark-dim);font-weight:500;}
+  .stack-item-name span{display:block;font-size:12px;color:var(--text-onDark-faint);margin-top:2px;font-weight:400;}
+  .stack-item-val{font-size:14px;color:var(--text-onDark-faint);text-decoration:line-through;white-space:nowrap;}
+  .stack-total{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:16px 34px;background:var(--ink-900);border-top:1px solid var(--line-dark-soft);border-bottom:1px solid var(--line-dark-soft);
+  }
+  .stack-total span{font-size:13.5px;color:var(--text-onDark-faint);font-weight:500;}
+  .stack-total strong{font-size:16px;color:var(--text-onDark-dim);text-decoration:line-through;font-weight:600;}
+  .stack-final{padding:30px 34px 34px;text-align:center;}
+  .stack-final-label{font-size:13px;color:var(--text-onDark-faint);font-weight:500;margin-bottom:8px;}
+  .stack-final-price{font-family:var(--font-display);font-size:52px;font-weight:600;color:var(--gold-soft);letter-spacing:-0.01em;line-height:1;margin-bottom:8px;}
+  .stack-final-price sup{font-size:22px;font-weight:600;vertical-align:super;}
+  .stack-final-note{font-size:13px;color:var(--text-onDark-faint);margin-bottom:24px;}
+  .stack-final .cta-primary{width:100%;justify-content:center;font-size:15.5px;padding:16px 20px;}
+  .guarantee-row{display:flex;align-items:center;justify-content:center;gap:8px;font-size:12.5px;color:var(--text-onDark-faint);margin-top:18px;}
+
+  /* ===== FAQ ===== */
+  .faq-section{background:var(--ink-950);}
+  .faq-list{margin-top:44px;border-top:1px solid var(--line-dark-soft);}
+  .faq-card{padding:24px 0;border-bottom:1px solid var(--line-dark-soft);}
+  .faq-card h3{font-family:var(--font-display);font-size:16px;font-weight:600;color:var(--text-onDark);margin-bottom:8px;}
+  .faq-card p{font-size:14.5px;color:var(--text-onDark-dim);line-height:1.65;max-width:760px;}
+
+  /* ===== FINAL CTA ===== */
+  .final-cta{background:var(--ink-900);padding:76px 0;text-align:center;border-top:1px solid var(--line-dark-soft);}
+  .final-cta h2{font-family:var(--font-display);font-size:29px;font-weight:600;margin-bottom:14px;letter-spacing:-0.01em;}
+  .final-cta p{font-size:15.5px;color:var(--text-onDark-dim);margin-bottom:28px;}
+
+  footer{background:var(--ink-950);text-align:center;padding:28px 0;font-size:13px;color:var(--text-onDark-faint);border-top:1px solid var(--line-dark-soft);}
+
+  @media (max-width:900px){
+    .hero-grid{grid-template-columns:1fr;}
+    h1{font-size:34px;}
+    .qualify-grid,.pain-grid{grid-template-columns:1fr;}
+    .qualify-grid .q-card,.pain-grid .pain-card{border-bottom:1px solid var(--line-dark-soft);}
+    .modules-list .mod-row{grid-template-columns:40px 1fr;}
+    .modules-list .mod-row > div:last-child{grid-column:1 / -1;}
+    .testi-grid{grid-template-columns:1fr;}
+    .notion-sidebar{flex-direction:column;}
+    .notion-nav{width:100%;display:flex;gap:8px;flex-wrap:wrap;}
+    .notion-cards{grid-template-columns:1fr;}
+    .preview-benefits-strip{grid-template-columns:1fr 1fr;}
+    .transform-box{padding:36px 22px;}
+    .section-title{font-size:26px;}
+    .hc-stats{grid-template-columns:1fr 1fr;}
+    .stack-final-price{font-size:42px;}
+  }
+</style>
+</head>
+<body>
+
+<!-- TOP BAR -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <p>Condição de lançamento: de <s>R$ 269,90</s> por <b>R$ 98,00</b>. Encerra em</p>
+    <div class="timer">
+      <div class="tunit"><strong id="d">03</strong><span>dias</span></div>
+      <span class="tsep">:</span>
+      <div class="tunit"><strong id="h">00</strong><span>horas</span></div>
+      <span class="tsep">:</span>
+      <div class="tunit"><strong id="m">00</strong><span>min</span></div>
+      <span class="tsep">:</span>
+      <div class="tunit"><strong id="s">00</strong><span>seg</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<header>
+  <div class="wrap hero-grid">
+    <div>
+      <div class="kicker">Estrutura comercial para contabilidades</div>
+      <h1>Pare de depender de indicação. <em>Escale o comercial</em> do seu escritório.</h1>
+      <p class="hero-desc">O <b>ScaleContab</b> reúne mais de 50 materiais prontos, organizados em 10 módulos, entre playbooks, scripts, templates e processos, para você estruturar a área comercial do seu escritório e sair do improviso ainda essa semana.</p>
+      <ul class="check-list">
+        <li>Materiais práticos, prontos para copiar e aplicar hoje</li>
+        <li>Scripts testados para ligação, WhatsApp e reunião</li>
+        <li>Playbooks completos de SDR, BDR e Inside Sales</li>
+        <li>Processos de gestão, metas e funil comercial</li>
+      </ul>
+      <div class="cta-row">
+        <a class="cta-primary" href="https://pay.kiwify.com.br/QfDTKFT" target="_blank">
+          Quero acessar agora
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <span class="cta-secondary-note">Acesso imediato. Pagamento único.</span>
+      </div>
+    </div>
+
+    <div class="hero-card">
+      <div class="hc-label">O que compõe o método</div>
+      <div class="hc-stats">
+        <div class="hc-stat"><strong>50+</strong><span>materiais prontos</span></div>
+        <div class="hc-stat"><strong>10</strong><span>módulos completos</span></div>
+      </div>
+      <div class="hc-modlist hc-modlist-compact">
+        <div class="hc-mod-mini"><span>01</span>Estrutura Comercial</div>
+        <div class="hc-mod-mini"><span>02</span>Prospecção Outbound</div>
+        <div class="hc-mod-mini"><span>03</span>Geração Inbound</div>
+        <div class="hc-mod-mini"><span>04</span>Pré-vendas</div>
+        <div class="hc-mod-mini"><span>05</span>Conversão Comercial</div>
+        <div class="hc-mod-mini"><span>06</span>Negociação</div>
+        <div class="hc-mod-mini"><span>07</span>Onboarding</div>
+        <div class="hc-mod-mini"><span>08</span>Retenção e Upsell</div>
+        <div class="hc-mod-mini"><span>09</span>Gestão Comercial</div>
+        <div class="hc-mod-mini"><span>10</span>CRM e Tecnologia</div>
+      </div>
+      <div class="hc-foot">
+        <span>Entregue 100% no Notion</span>
+        <div class="hc-badge">Acesso vitalício</div>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- PROOF STRIP -->
+<div class="proof-strip">
+  <div class="wrap proof-items">
+    <div class="proof-item">Não é um curso</div>
+    <div class="proof-item">Materiais prontos para usar hoje</div>
+    <div class="proof-item">Feito para contabilidades</div>
+    <div class="proof-item">Acesso imediato e vitalício</div>
+  </div>
+</div>
+
+<!-- QUALIFIER -->
+<section class="qualify-section">
+  <div class="wrap">
+    <div class="text-center reveal">
+      <div class="eyebrow-tag">Isso é para você?</div>
+      <h2 class="section-title">Antes de continuar, seja honesto com você mesmo</h2>
+      <p class="section-desc">O ScaleContab entrega estrutura pronta, mas quem implementa é você. Veja se faz sentido para o seu momento.</p>
+    </div>
+    <div class="qualify-grid">
+      <div class="q-card yes reveal">
+        <div class="q-head"><div class="q-ico">Sim</div><h3>Faz sentido se você</h3></div>
+        <ul class="q-list">
+          <li>Quer parar de depender só de indicação para crescer</li>
+          <li>Já tem clientes, mas não tem processo comercial nenhum</li>
+          <li>Tem equipe, ou vai ter, e precisa de script e playbook prontos</li>
+          <li>Prefere implementar algo pronto a inventar do zero</li>
+        </ul>
+      </div>
+      <div class="q-card no reveal">
+        <div class="q-head"><div class="q-ico">Não</div><h3>Não faz sentido se você</h3></div>
+        <ul class="q-list">
+          <li>Está procurando um curso teórico com aulas em vídeo</li>
+          <li>Não pretende dedicar tempo nenhum para implementar</li>
+          <li>Não atua com contabilidade ou serviços contábeis</li>
+          <li>Espera resultado sem aplicar nenhum material</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PAIN / SOLUTION -->
+<section class="pain-section">
+  <div class="wrap">
+    <div class="text-center reveal">
+      <div class="eyebrow-tag">O diagnóstico</div>
+      <h2 class="section-title">Sua contabilidade está crescendo, mas o comercial ainda opera no improviso?</h2>
+      <p class="section-desc">A maioria dos escritórios tem excelência técnica e comercial desestruturado. O resultado é crescimento lento, dependência de indicações e nenhuma previsibilidade.</p>
+    </div>
+    <div class="pain-grid">
+      <div class="pain-card reveal">
+        <div class="pain-card-label">Cenário atual, sem estrutura</div>
+        <h3>O que acontece hoje</h3>
+        <ul class="pain-list">
+          <li>Depende quase por completo de indicações para crescer</li>
+          <li>Não existe processo de prospecção ativa</li>
+          <li>Ninguém sabe qual script usar em cada etapa</li>
+          <li>Não acompanha indicador comercial nenhum</li>
+          <li>Não sabe onde o cliente some no funil</li>
+        </ul>
+      </div>
+      <div class="pain-card solution reveal">
+        <div class="pain-card-label">Com o ScaleContab</div>
+        <h3>O que muda na prática</h3>
+        <ul class="pain-list">
+          <li>Processo comercial documentado e replicável</li>
+          <li>Scripts prontos para WhatsApp, e-mail e ligação</li>
+          <li>Cadências de prospecção para SDR e BDR</li>
+          <li>Dashboard de indicadores e metas prontos</li>
+          <li>Funil e pipeline estruturado no Notion</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- INFO CAROUSEL -->
+<section class="carousel-section">
+  <div class="wrap">
+    <div class="carousel-head reveal">
+      <div>
+        <div class="eyebrow-tag">Em números</div>
+        <h2 class="section-title" style="font-size:26px;margin-bottom:0;">Por que contadores estão adotando o método</h2>
+      </div>
+      <div class="carousel-nav">
+        <button class="car-btn" id="carPrev" aria-label="Anterior">‹</button>
+        <button class="car-btn" id="carNext" aria-label="Próximo">›</button>
+      </div>
+    </div>
+    <div class="carousel-track" id="carTrack">
+      <div class="car-card"><div class="car-num">01</div><strong>50+</strong><p>Materiais prontos para copiar e aplicar direto na sua operação comercial.</p></div>
+      <div class="car-card"><div class="car-num">02</div><strong>10</strong><p>Módulos que cobrem da prospecção até a gestão e escala do comercial.</p></div>
+      <div class="car-card"><div class="car-num">03</div><strong>100%</strong><p>Do conteúdo entregue dentro do Notion, organizado e pronto para uso imediato.</p></div>
+      <div class="car-card"><div class="car-num">04</div><strong>0</strong><p>Aulas em vídeo para assistir. É biblioteca de aplicação, não curso teórico.</p></div>
+      <div class="car-card"><div class="car-num">05</div><strong>Vitalício</strong><p>Acesso sem mensalidade, com atualizações incluídas conforme o método evolui.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- MODULES -->
+<section class="inside-section">
+  <div class="wrap">
+    <div class="text-center reveal">
+      <div class="eyebrow-tag">O que você recebe</div>
+      <h2 class="section-title">Dez módulos, mais de 50 materiais, prontos para implementar</h2>
+      <p class="section-desc">Cada módulo cobre uma etapa da estrutura comercial, da primeira abordagem à retenção do cliente. Você não precisa ler do zero, acessa o que precisa quando precisa.</p>
+    </div>
+    <div class="modules-list">
+      <div class="mod-row reveal">
+        <div class="mod-row-num">01</div>
+        <div><h3>Estrutura Comercial</h3><div class="mod-sub">Base do processo de vendas</div></div>
+        <div class="tag-list"><span class="tag">Definição de ICP</span><span class="tag">Qualificação MQL</span><span class="tag">Funil Comercial</span><span class="tag">Jornada do Cliente</span><span class="tag">Processo Comercial</span></div>
+      </div>
+      <div class="mod-row reveal">
+        <div class="mod-row-num">02</div>
+        <div><h3>Prospecção Outbound</h3><div class="mod-sub">Geração ativa de oportunidades</div></div>
+        <div class="tag-list"><span class="tag">Playbook SDR</span><span class="tag">Playbook BDR</span><span class="tag">Scripts de Prospecção</span><span class="tag">Cadências de Ligação</span><span class="tag">Cadências de E-mail</span></div>
+      </div>
+      <div class="mod-row reveal">
+        <div class="mod-row-num">03</div>
+        <div><h3>Geração Inbound</h3><div class="mod-sub">Captação por conteúdo e indicação</div></div>
+        <div class="tag-list"><span class="tag">Qualificação de Leads</span><span class="tag">Formulários de Captação</span><span class="tag">Roteiro de Atendimento</span><span class="tag">Programa de Indicação</span></div>
+      </div>
+      <div class="mod-row reveal">
+        <div class="mod-row-num">04</div>
+        <div><h3>Pré-vendas</h3><div class="mod-sub">Qualificar antes de apresentar</div></div>
+        <div class="tag-list"><span class="tag">Roteiro de Discovery</span><span class="tag">Critérios de Qualificação</span><span class="tag">Agendamento de Reunião</span><span class="tag">Checklist de Passagem</span></div>
+      </div>
+      <div class="mod-row reveal">
+        <div class="mod-row-num">05</div>
+        <div><h3>Conversão Comercial</h3><div class="mod-sub">Apresentar e propor</div></div>
+        <div class="tag-list"><span class="tag">Inside Sales</span><span class="tag">Apresentação Comercial</span><span class="tag">Modelo de Proposta</span><span class="tag">Precificação de Serviços</span></div>
+      </div>
+      <div class="mod-row reveal">
+        <div class="mod-row-num">06</div>
+        <div><h3>Negociação e Fechamento</h3><div class="mod-sub">Fechar mais contratos</div></div>
+        <div class="tag-list"><span class="tag">Gestão de Objeções</span><span class="tag">Scripts de Follow-up</span><span class="tag">Condições Comerciais</span><span class="tag">Modelo de Contrato</span></div>
+      </div>
+      <div class="mod-row reveal">
+        <div class="mod-row-num">07</div>
+        <div><h3>Onboarding de Clientes</h3><div class="mod-sub">Primeira impressão bem feita</div></div>
+        <div class="tag-list"><span class="tag">Processo de Boas-vindas</span><span class="tag">Reunião de Kickoff</span><span class="tag">Alinhamento de Expectativas</span></div>
+      </div>
+      <div class="mod-row reveal">
+        <div class="mod-row-num">08</div>
+        <div><h3>Retenção e Upsell</h3><div class="mod-sub">Manter e expandir a base</div></div>
+        <div class="tag-list"><span class="tag">Scripts de Renovação</span><span class="tag">Cross-sell de Serviços</span><span class="tag">Pesquisa de Satisfação</span></div>
+      </div>
+      <div class="mod-row reveal">
+        <div class="mod-row-num">09</div>
+        <div><h3>Gestão Comercial</h3><div class="mod-sub">Acompanhar com previsibilidade</div></div>
+        <div class="tag-list"><span class="tag">Dashboard de Indicadores</span><span class="tag">Metas Comerciais</span><span class="tag">Reuniões de Resultado</span></div>
+      </div>
+      <div class="mod-row reveal">
+        <div class="mod-row-num">10</div>
+        <div><h3>CRM e Tecnologia</h3><div class="mod-sub">Organizar a operação</div></div>
+        <div class="tag-list"><span class="tag">Configuração de CRM</span><span class="tag">Pipeline no Notion</span><span class="tag">Automações Comerciais</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREVIEW -->
+<section class="preview-section">
+  <div class="wrap">
+    <div class="text-center reveal">
+      <div class="eyebrow-tag">Plataforma</div>
+      <h2 class="section-title">Tudo organizado dentro do Notion, do seu jeito</h2>
+      <p class="section-desc">Você duplica o espaço de trabalho para a sua conta e já começa a usar. Simples, organizado e sempre acessível.</p>
+    </div>
+    <div class="preview-box reveal">
+      <div class="preview-topbar">
+        <div class="dot"></div><div class="dot"></div><div class="dot"></div>
+        <div class="preview-url">notion.so / ScaleContab</div>
+      </div>
+      <div class="preview-content">
+        <div class="notion-sidebar">
+          <div class="notion-nav">
+            <div class="notion-nav-item active">Início</div>
+            <div class="notion-nav-item">Estrutura</div>
+            <div class="notion-nav-item">Geração</div>
+            <div class="notion-nav-item">Conversão</div>
+            <div class="notion-nav-item">Gestão</div>
+          </div>
+          <div class="notion-main">
+            <div class="notion-heading">ScaleContab</div>
+            <div class="notion-sub">Biblioteca comercial para contabilidades, mais de 50 materiais em 10 módulos</div>
+            <div class="notion-cards">
+              <div class="notion-card"><div class="notion-card-tag">Script pronto</div><h4>Abordagem no WhatsApp</h4><p>Mensagem de primeiro contato com prospects frios</p></div>
+              <div class="notion-card"><div class="notion-card-tag">Playbook</div><h4>Roteiro de SDR</h4><p>Processo completo de qualificação de leads</p></div>
+              <div class="notion-card"><div class="notion-card-tag">Template</div><h4>Dashboard de Metas</h4><p>Acompanhe resultado comercial semanal</p></div>
+              <div class="notion-card"><div class="notion-card-tag">Playbook</div><h4>Gestão de Objeções</h4><p>Respostas prontas para os obstáculos mais comuns</p></div>
+              <div class="notion-card"><div class="notion-card-tag">Script pronto</div><h4>E-mail de follow-up</h4><p>Sequência de 5 e-mails para reativar leads</p></div>
+              <div class="notion-card"><div class="notion-card-tag">Processo</div><h4>Funil Comercial</h4><p>Etapas e critérios de avanço no pipeline</p></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="preview-benefits-strip">
+      <div class="pb-item"><h4>Acesso vitalício</h4><p>Consulte os materiais sempre que precisar</p></div>
+      <div class="pb-item"><h4>Acesso imediato</h4><p>Disponível após confirmação da compra</p></div>
+      <div class="pb-item"><h4>Copie e use</h4><p>Scripts e templates prontos para aplicar</p></div>
+      <div class="pb-item"><h4>Atualizações</h4><p>Novos materiais adicionados com o tempo</p></div>
+    </div>
+  </div>
+</section>
+
+<!--
+  ATENÇÃO: os depoimentos abaixo são ilustrativos (nomes e escritórios fictícios),
+  criados apenas para você visualizar o layout. Substitua por depoimentos reais de
+  clientes antes de publicar a página, para evitar problemas com propaganda enganosa.
+-->
+<section class="testi-section">
+  <div class="wrap">
+    <div class="text-center reveal">
+      <div class="eyebrow-tag">Resultado de quem aplicou</div>
+      <h2 class="section-title">O que dizem os contadores que estruturaram o comercial</h2>
+      <p class="section-desc">Relatos de escritórios que saíram do improviso e passaram a ter processo comercial definido.</p>
+    </div>
+    <div class="testi-grid">
+      <div class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <p>Em seis semanas organizamos um funil que simplesmente não existia. Hoje sabemos exatamente em qual etapa cada prospect está e por que perdemos ou ganhamos cada proposta.</p>
+        <div class="testi-person"><strong>Roberto Almeida Ferraz</strong><span>Sócio diretor, Almeida Ferraz Contabilidade</span></div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <p>Os scripts de prospecção economizaram meses de tentativa e erro para a nossa equipe. Bastou adaptar ao nosso tom de voz e colocar em prática.</p>
+        <div class="testi-person"><strong>Marcia Ferreira Vasconcelos</strong><span>Sócia diretora, Vasconcelos Assessoria Contábil</span></div>
+      </div>
+      <div class="testi-card reveal">
+        <div class="testi-stars">★★★★★</div>
+        <p>O que mais mudou foi a previsibilidade. Antes crescíamos por sorte, agora acompanhamos indicador comercial toda semana e sabemos onde agir.</p>
+        <div class="testi-person"><strong>Eduardo Nogueira Pires</strong><span>Contador responsável, Pires &amp; Nogueira Contabilidade</span></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TRANSFORMATION -->
+<section class="transform-section">
+  <div class="wrap">
+    <div class="transform-box reveal">
+      <div class="eyebrow-tag" style="display:block;">O resultado</div>
+      <h2>O que muda depois que você implementa?</h2>
+      <p>Sua contabilidade para de operar no improviso e passa a ter um processo comercial real, com clareza sobre quem abordar, como gerar oportunidades, como conduzir o atendimento e quais indicadores acompanhar semana a semana.</p>
+      <a class="cta-primary" href="https://pay.kiwify.com.br/QfDTKFT" target="_blank">
+        Quero estruturar meu comercial
+        <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- PRICE / VALUE STACK -->
+<section class="price-section">
+  <div class="wrap">
+    <div class="text-center reveal">
+      <div class="eyebrow-tag">Investimento</div>
+      <h2 class="section-title">O que você leva hoje</h2>
+      <p class="section-desc">Veja o valor de cada módulo separadamente, e o quanto você economiza levando o pacote completo.</p>
+    </div>
+
+    <div class="stack-card reveal">
+      <div class="stack-head">
+        <div class="stack-eyebrow">Resumo do que está incluso</div>
+        <h2>Acesso completo ao ScaleContab</h2>
+      </div>
+      <div class="stack-items">
+        <div class="stack-item"><div class="stack-item-name">Estrutura e Geração de Oportunidades<span>Módulos 01 a 04: ICP, funil, prospecção e pré-vendas</span></div><div class="stack-item-val">R$ 187</div></div>
+        <div class="stack-item"><div class="stack-item-name">Conversão e Relacionamento<span>Módulos 05 a 08: fechamento, onboarding e retenção</span></div><div class="stack-item-val">R$ 187</div></div>
+        <div class="stack-item"><div class="stack-item-name">Gestão Comercial e Tecnologia<span>Módulos 09 e 10: indicadores, metas e CRM</span></div><div class="stack-item-val">R$ 97</div></div>
+        <div class="stack-item"><div class="stack-item-name">Atualizações e acesso vitalício<span>Novos materiais sem custo adicional</span></div><div class="stack-item-val">R$ 56</div></div>
+      </div>
+      <div class="stack-total"><span>Valor se comprado separadamente</span><strong>R$ 527</strong></div>
+      <div class="stack-final">
+        <div class="stack-final-label">Hoje, pacote completo por apenas</div>
+        <div class="stack-final-price"><sup>R$</sup>98</div>
+        <div class="stack-final-note">Pagamento único. Sem mensalidade. Sem renovação.</div>
+        <a class="cta-primary" href="https://pay.kiwify.com.br/QfDTKFT" target="_blank">
+          Garantir meu acesso agora
+          <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+        </a>
+        <div class="guarantee-row">Compra segura. Ambiente criptografado. Kiwify.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="faq-section">
+  <div class="wrap">
+    <div class="text-center reveal">
+      <div class="eyebrow-tag">Dúvidas frequentes</div>
+      <h2 class="section-title">Perguntas antes de acessar</h2>
+    </div>
+    <div class="faq-list">
+      <div class="faq-card reveal"><h3>Isso é um curso?</h3><p>Não. O ScaleContab é uma biblioteca de implementação, com materiais escritos, prontos e práticos. Você não assiste aula, acessa o material e usa direto na sua operação.</p></div>
+      <div class="faq-card reveal"><h3>Preciso ter equipe de vendas?</h3><p>Não. Serve tanto para quem está começando a montar o comercial quanto para quem já tem SDR e Inside Sales e quer padronizar o processo.</p></div>
+      <div class="faq-card reveal"><h3>Como recebo o acesso?</h3><p>Após a confirmação da compra, você recebe o link do Notion por e-mail. É só duplicar para a sua conta e começar a usar.</p></div>
+      <div class="faq-card reveal"><h3>Por quanto tempo tenho acesso?</h3><p>Para sempre. O pagamento é único e o acesso não expira. Você também recebe atualizações sem custo conforme novos materiais forem adicionados.</p></div>
+      <div class="faq-card reveal"><h3>Os materiais já estão prontos?</h3><p>Sim. Você recebe tudo estruturado, scripts, playbooks, templates e processos, prontos para copiar e adaptar à realidade do seu escritório.</p></div>
+      <div class="faq-card reveal"><h3>Funciona para qualquer tamanho de escritório?</h3><p>Sim. Tanto para sócios que vendem sozinhos quanto para escritórios que já têm time comercial. O conteúdo cobre desde a base até a escala.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<div class="final-cta">
+  <div class="wrap reveal">
+    <h2>Sua contabilidade não precisa mais depender de sorte para crescer.</h2>
+    <p>Acesse agora o ScaleContab e comece a implementar ainda hoje.</p>
+    <a class="cta-primary" href="https://pay.kiwify.com.br/QfDTKFT" target="_blank">
+      Quero acessar o ScaleContab
+      <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M12 5l7 7-7 7"/></svg>
+    </a>
+  </div>
+</div>
+
+<footer>ScaleContab © 2025. Todos os direitos reservados.</footer>
+
+<script>
+  const key = 'scalecontab_end';
+  let end = localStorage.getItem(key);
+  if (!end) {
+    end = Date.now() + 3 * 24 * 60 * 60 * 1000;
+    localStorage.setItem(key, end);
+  }
+  end = parseInt(end);
+  function pad(n){ return String(Math.max(0,n)).padStart(2,'0'); }
+  function tick(){
+    const diff = end - Date.now();
+    if (diff <= 0){ ['d','h','m','s'].forEach(id => document.getElementById(id).textContent='00'); return; }
+    document.getElementById('d').textContent = pad(Math.floor(diff/86400000));
+    document.getElementById('h').textContent = pad(Math.floor((diff%86400000)/3600000));
+    document.getElementById('m').textContent = pad(Math.floor((diff%3600000)/60000));
+    document.getElementById('s').textContent = pad(Math.floor((diff%60000)/1000));
+  }
+  tick(); setInterval(tick,1000);
+
+  const els = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window){
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, { threshold: 0.12 });
+    els.forEach(el => io.observe(el));
+  } else {
+    els.forEach(el => el.classList.add('in'));
+  }
+
+  const track = document.getElementById('carTrack');
+  const prevBtn = document.getElementById('carPrev');
+  const nextBtn = document.getElementById('carNext');
+  if (track){
+    const step = () => track.querySelector('.car-card').offsetWidth + 16;
+    prevBtn.addEventListener('click', () => track.scrollBy({left:-step(), behavior:'smooth'}));
+    nextBtn.addEventListener('click', () => track.scrollBy({left:step(), behavior:'smooth'}));
+  }
+</script>
+</body>
+</html>
